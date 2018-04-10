@@ -45,14 +45,14 @@ function loadMemory() {
   const rl = readline.createInterface({
     input: fs.createReadStream('./mult.ls8')
   });
-
+  let n = -3;
   rl.on('line', function (line) {
-    let num = -1;
+    n++;
     if (line === "") {
       
     } else if (!isNaN(line.slice(0,7))) {
       line = line.replace(/#/g, "//");
-      cpu.poke(++num, parseInt(line.slice(0,7).toString(), 2));
+      console.log(n, parseInt(line.slice(0,7), 2));
     }
   });
 
