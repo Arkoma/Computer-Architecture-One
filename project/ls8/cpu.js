@@ -8,7 +8,7 @@
 //const CMP =
 //const DEC =
 //const DIV =
-const HLT = 0b1;
+const HLT = 0b00000001;
 //const INC =
 // const INT =
 //const IRET =
@@ -85,7 +85,9 @@ class CPU {
      */
     alu(op, regA, regB) {
         switch (op) {
-            case 'MUL':
+          case MUL:
+            this.reg[regA] = this.reg[regA] * this.reg[regB];
+            break;
         }
     }
 
@@ -112,24 +114,24 @@ class CPU {
         // Execute the instruction. Perform the actions for the instruction as
         // outlined in the LS-8 spec. 
         switch(IR) {
-            case LDI:
-                this.reg[operandA] = operandB;
-                // console.log('IR: ', IR, '\n\noperandA: ', operandA, '\n\noperandB: ', operandB);
-                break;
-            case PRN:
-                console.log('IR: ', IR, '\n\noperandA: ', operandA, '\n\noperandB: ', operandB);
-                console.log(this.reg[operandA]);
-                break;
-            case HLT:
-                this.stopClock();
-                break;
+          case LDI:
+            this.reg[operandA] = operandB;
+            break;
+          case PRN:
+            console.log(this.reg[operandA]);
+            break;
+          case HLT:
+            this.stopClock();
+            break;
+          case MUL:
+            this.alu(IR, operandA, operandB);
+            break;
         }	
         // Increment the PC register to go to the next instruction. Instructions
         // can be 1, 2, or 3 bytes long. Hint: the high 2 bits of the
         // instruction byte tells you how many bytes follow the instruction byte
         // for any particular instruction.
         
-        // !!! IMPLEMENT ME
         let operandCount = (IR >>> 6) & 0b11;
         let totalInstructionLen = operandCount + 1;
         this.reg.PC += totalInstructionLen;
