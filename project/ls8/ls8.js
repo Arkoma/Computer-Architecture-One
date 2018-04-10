@@ -1,5 +1,8 @@
 const RAM = require('./ram');
 const CPU = require('./cpu');
+const readline = require('readline');
+const fs = require('fs');
+
 
 /**
  * Load an LS8 program into memory
@@ -19,7 +22,7 @@ function loadMemory() {
         "00000001"  // HLT       Halt and quit
     ]; */
 
-  const program = [
+  /*  const program = [
     //# mult.ls8
 
     "10011001", // # LDI R0,8
@@ -36,11 +39,27 @@ function loadMemory() {
     "00000001" // # HLT
   
   ];
+  */
+  const mul = fs.readFileSync('./mult.ls8', { encoding: 'utf8' } );
+  
+  const rl = readline.createInterface({
+    input: fs.createReadStream('./mult.ls8')
+  });
 
-    // Load the program into the CPU's memory a byte at a time
-    for (let i = 0; i < program.length; i++) {
-        cpu.poke(i, parseInt(program[i], 2));
+  rl.on('line', function (line) {
+    let num = -1;
+    if (line === "") {
+      
+    } else if (!isNaN(line.slice(0,7))) {
+      line = line.replace(/#/g, "//");
+      cpu.poke(++num, parseInt(line.slice(0,7).toString(), 2));
     }
+  });
+
+  // Load the program into the CPU's memory a byte at a time
+  /*for (let i = 0; i < program.length; i++) {
+        cpu.poke(i, parseInt(program[i], 2));
+    } */ 
 }
 
 /**
