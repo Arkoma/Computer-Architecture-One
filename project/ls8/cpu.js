@@ -2,6 +2,37 @@
  * LS-8 v2.0 emulator skeleton code
  */
 
+//const ADD = 10101000;
+//const AND = 10110011;
+//const CALL = 01001000;
+//const CMP =
+//const DEC =
+//const DIV =
+const HLT = 0b1;
+//const INC =
+// const INT =
+//const IRET =
+//const JEQ = 
+// const JGT =
+//const JLT =
+//const JMP =
+//const JNE =
+//const LD =
+const LDI = 0b10011001;
+//const MOD =
+const MUL = 0b10101010;
+//const NOP =
+//const NOT =
+//const OR =
+//const POP =
+//const PRA =
+const PRN = 0b01000011;
+//const PUSH = 
+//const RET = 00001001;
+//const ST = 10011010;
+//const SUB = 10101001;
+//const XOR = 10110010;
+
 /**
  * Class for simulating a simple Computer (CPU & memory)
  */
@@ -55,17 +86,6 @@ class CPU {
     alu(op, regA, regB) {
         switch (op) {
             case 'MUL':
-                return regA * regB;
-                break;
-            case 'PRN':
-                console.log(regA);
-                break;
-            case 'HLT':
-                this.stopClock();
-                break;
-            case 'LDI':
-                regA = regB;
-                break;
         }
     }
 
@@ -81,7 +101,7 @@ class CPU {
         let IR = this.ram.read(this.reg.PC);
 
         // Debugging output
-        //console.log(`${this.reg.PC}: ${IR.toString(2)}`);
+        // console.log(`${this.reg.PC}: ${IR.toString(2)}`);
 
         // Get the two bytes in memory _after_ the PC in case the instruction
         // needs them.
@@ -91,47 +111,31 @@ class CPU {
 
         // Execute the instruction. Perform the actions for the instruction as
         // outlined in the LS-8 spec. 
-
-        //const ADD = 10101000;
-        //const AND = 10110011;
-        //const CALL = 01001000;
-        //const CMP =
-        //const DEC =
-        //const DIV =
-        const HLT = 0b00000001;
-        //const INC =
-        // const INT =
-        //const IRET =
-        //const JEQ = 
-        // const JGT =
-        //const JLT =
-        //const JMP =
-        //const JNE =
-        //const LD =
-        const LDI = 0b10011001;
-        //const MOD =
-        const MUL = 0b10101010;
-        //const NOP =
-        //const NOT =
-        //const OR =
-        //const POP =
-        //const PRA =
-        const PRN = 0b01000011;
-        //const PUSH = 
-        //const RET = 00001001;
-        //const ST = 10011010;
-        //const SUB = 10101001;
-        //const XOR = 10110010;
-
+        switch(IR) {
+            case LDI:
+                this.reg[operandA] = operandB;
+                // console.log('IR: ', IR, '\n\noperandA: ', operandA, '\n\noperandB: ', operandB);
+                break;
+            case PRN:
+                console.log('IR: ', IR, '\n\noperandA: ', operandA, '\n\noperandB: ', operandB);
+                console.log(this.reg[operandA]);
+                break;
+            case HLT:
+                this.stopClock();
+                break;
+        }	
         // Increment the PC register to go to the next instruction. Instructions
         // can be 1, 2, or 3 bytes long. Hint: the high 2 bits of the
         // instruction byte tells you how many bytes follow the instruction byte
         // for any particular instruction.
         
         // !!! IMPLEMENT ME
-        if (IR >= 0b01000000 && IR < 0b10000000) this.reg.PC += 2;
-        if (IR >= 0b10000000) this.reg.PC += 3;
-        this.reg.PC += 1;
+        let operandCount = (IR >>> 6) & 0b11;
+        let totalInstructionLen = operandCount + 1;
+        this.reg.PC += totalInstructionLen;
+        // if (IR >= 0b01000000 && IR < 0b10000000) this.reg.PC += 2;
+        //     if (IR >= 0b10000000) this.reg.PC += 3;
+        //     this.reg.PC += 1;
     }
 }
 
