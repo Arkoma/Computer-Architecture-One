@@ -87,7 +87,6 @@ class CPU {
         switch (op) {
           case MUL:
             this.reg[regA] = this.reg[regA] * this.reg[regB];
-            console.log('result of multiplication', this.reg[regA]);
             break;
         }
     }
@@ -116,19 +115,15 @@ class CPU {
         // outlined in the LS-8 spec. 
         switch(IR) {
           case LDI:
-            console.log('loading ...');
             this.reg[operandA] = operandB;
             break;
           case PRN:
-            console.log('printing...');
             console.log(this.reg[operandA]);
             break;
           case HLT:
-            console.log('halting now ...');
             this.stopClock();
             break;
           case MUL:
-            console.log('multiplying ' + operandA + ' with ' + operandB);
             this.alu(IR, operandA, operandB);
             break;
         }	
