@@ -24,10 +24,10 @@ const MUL = 0b10101010;
 //const NOP =
 //const NOT =
 //const OR =
-//const POP =
+const POP = 0b01001100;
 //const PRA =
 const PRN = 0b01000011;
-//const PUSH = 
+const PUSH = 0b01001101;
 //const RET = 00001001;
 //const ST = 10011010;
 //const SUB = 10101001;
@@ -112,6 +112,10 @@ class CPU {
           case MUL:
             this.alu(IR, operandA, operandB);
             break;
+            //case POP:
+
+            //case PUSH:
+            //operandA;
         }	
         let operandCount = (IR >>> 6) & 0b11;
         let totalInstructionLen = operandCount + 1;
