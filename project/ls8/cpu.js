@@ -95,7 +95,6 @@ class CPU {
      */
     tick() {
         let IR = this.ram.read(this.reg.PC);
-
         let operandA = this.ram.read(this.reg.PC + 1);
         let operandB = this.ram.read(this.reg.PC + 2);
 
@@ -112,10 +111,14 @@ class CPU {
           case MUL:
             this.alu(IR, operandA, operandB);
             break;
-            //case POP:
-
-            //case PUSH:
-            //operandA;
+          case PUSH:
+            this.ram.SP -= 1;
+            this.ram.write(this.ram.SP, this.reg[operandA]);
+            break;
+          case POP:
+            this.reg[operandA] = this.ram.read(this.ram.SP);
+            this.ram.SP += 1;
+            break;
         }	
         let operandCount = (IR >>> 6) & 0b11;
         let totalInstructionLen = operandCount + 1;
