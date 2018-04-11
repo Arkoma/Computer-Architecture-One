@@ -41,22 +41,26 @@ function loadMemory() {
   ];
   */
   // const mul = fs.readFileSync('./mult.ls8', { encoding: 'utf8' } );
-  
+  let ended = false;
+  const instream = fs.createReadStream('./mult.ls8');
+  instream.on('end', () => { ended = true });
+ 
   const rl = readline.createInterface({
-    input: fs.createReadStream('./mult.ls8')
+    input: instream
   });
   let n = -3;
   rl.on('line', function (line) {
     n++;
-    if (line === "") {
-      
+    console.log('function (line)');
+    if (!line) {
     } else if (!isNaN(line.slice(0,7))) {
       line = line.replace(/#/g, "//");
       cpu.poke(n, parseInt(line.slice(0,7), 2));
       console.log(ram.read(n));
+    } else if (ended) {
+      console.log('eof reached'); 
     }
   });
-
   // Load the program into the CPU's memory a byte at a time
   /*for (let i = 0; i < program.length; i++) {
         cpu.poke(i, parseInt(program[i], 2));
@@ -73,5 +77,5 @@ let cpu = new CPU(ram);
 // TODO: get name of ls8 file to load from command line
 
 loadMemory(cpu);
-
+console.log('starting the clock');
 cpu.startClock();
