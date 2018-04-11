@@ -40,7 +40,7 @@ function loadMemory() {
   
   ];
   */
-  const mul = fs.readFileSync('./mult.ls8', { encoding: 'utf8' } );
+  // const mul = fs.readFileSync('./mult.ls8', { encoding: 'utf8' } );
   
   const rl = readline.createInterface({
     input: fs.createReadStream('./mult.ls8')
@@ -52,7 +52,8 @@ function loadMemory() {
       
     } else if (!isNaN(line.slice(0,7))) {
       line = line.replace(/#/g, "//");
-      console.log(n, parseInt(line.slice(0,7), 2));
+      cpu.poke(n, parseInt(line.slice(0,7), 2));
+      console.log(ram.read(n));
     }
   });
 
