@@ -29,7 +29,7 @@ const POP = 0b01001100;
 const PRN = 0b01000011;
 const PUSH = 0b01001101;
 const RET = 0b00001001;
-//const ST = 10011010;
+const ST = 0b10011010;
 //const SUB = 10101001;
 //const XOR = 10110010;
 
@@ -102,38 +102,36 @@ class CPU {
     tick() {
         let IR = this.ram.read(this.reg.PC);
         let operandA = this.ram.read(this.reg.PC + 1);
-        let operandB = this.ram.read(this.reg.PC + 2);
-
+        let operandB = this.ram.read(this.reg.PC + 2); 
 				let advancePC = true;
 
         switch(IR) {
-          case LDI:
-            this.reg[operandA] = operandB;
-            break;
-          case PRN:
-            console.log(this.reg[operandA]);
-            break;
-          case HLT:
-            this.stopClock();
-            break;
-          case MUL:
-					case ADD:
-            this.alu(IR, operandA, operandB);
-            break;
-          case PUSH:
-            this.reg[SP] -= 1;
-            this.ram.write(this.reg[SP], this.reg[operandA]);
-            break;
-          case POP:
-            this.reg[operandA] = this.ram.read(this.reg[SP]);
-            this.reg[SP] += 1;
-            break;
 					case CALL:
 						advancePC = false;
 						this.ram.write(this.reg[SP], this.reg.PC + 2);
 						this.reg.PC = this.reg[operandA];
-						return null;
-						break;
+						break; 
+          case HLT:
+            this.stopClock();
+            break; 
+          case LDI:
+            this.reg[operandA] = operandB;
+            break;
+          case MUL:
+					case ADD:
+            this.alu(IR, operandA, operandB);
+            break; 
+          case POP:
+            this.reg[operandA] = this.ram.read(this.reg[SP]);
+            this.reg[SP] += 1;
+            break; 
+          case PRN:
+            console.log(this.reg[operandA]);
+            break;
+					case PUSH:
+            this.reg[SP] -= 1;
+            this.ram.write(this.reg[SP], this.reg[operandA]);
+            break; 
 					case RET:
 						advancePC = false;
 						this.reg.PC = this.ram.read(this.reg[SP]);
