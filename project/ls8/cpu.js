@@ -66,6 +66,9 @@ class CPU {
         this.clock = setInterval(() => {
             this.tick();
         }, 1); // 1 ms delay == 1 KHz clock == 0.000001 GHz
+				//this.clock = setInterval(() => {
+				//	this.interruptTimer();
+				//}, 1000);
     }
 
     /**
@@ -136,6 +139,9 @@ class CPU {
 						advancePC = false;
 						this.reg.PC = this.ram.read(this.reg[SP]);
 						break;
+					case ST:
+						this.reg[this.reg[operandA]] = this.reg[operandB];
+						break;
         }	
 			if (advancePC) {
         let operandCount = (IR >>> 6) & 0b11;
@@ -143,6 +149,9 @@ class CPU {
         this.reg.PC += totalInstructionLen;
 			}
     }
+//	interruptTimer() {
+//		
+//	}
 }
 
 module.exports = CPU;
