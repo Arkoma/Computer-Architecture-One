@@ -2,9 +2,9 @@
  * LS-8 v2.0 emulator skeleton code
  */
 
-//const ADD = 10101000;
+const ADD = 0b10101000;
 //const AND = 10110011;
-//const CALL = 01001000;
+const CALL = 0b01001000;
 //const CMP =
 //const DEC =
 //const DIV =
@@ -28,7 +28,7 @@ const POP = 0b01001100;
 //const PRA =
 const PRN = 0b01000011;
 const PUSH = 0b01001101;
-//const RET = 00001001;
+const RET = 0b00001001;
 //const ST = 10011010;
 //const SUB = 10101001;
 //const XOR = 10110010;
@@ -90,6 +90,9 @@ class CPU {
           case MUL:
             this.reg[regA] = this.reg[regA] * this.reg[regB];
             break;
+					case ADD:
+						this.reg[regA] = this.reg[regA] + this.reg[regB];
+						break;
         }
     }
 
@@ -100,6 +103,8 @@ class CPU {
         let IR = this.ram.read(this.reg.PC);
         let operandA = this.ram.read(this.reg.PC + 1);
         let operandB = this.ram.read(this.reg.PC + 2);
+
+				let advancePC = true;
 
         switch(IR) {
           case LDI:
@@ -112,6 +117,7 @@ class CPU {
             this.stopClock();
             break;
           case MUL:
+					case ADD:
             this.alu(IR, operandA, operandB);
             break;
           case PUSH:
@@ -122,10 +128,22 @@ class CPU {
             this.reg[operandA] = this.ram.read(this.reg[SP]);
             this.reg[SP] += 1;
             break;
+					case CALL:
+						advancePC = false;
+						this.ram.write(this.reg[SP], this.reg.PC + 2);
+						this.reg.PC = this.reg[operandA];
+						return null;
+						break;
+					case RET:
+						advancePC = false;
+						this.reg.PC = this.ram.read(this.reg[SP]);
+						break;
         }	
+			if (advancePC) {
         let operandCount = (IR >>> 6) & 0b11;
         let totalInstructionLen = operandCount + 1;
         this.reg.PC += totalInstructionLen;
+			}
     }
 }
 
