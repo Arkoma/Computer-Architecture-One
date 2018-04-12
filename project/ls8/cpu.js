@@ -33,6 +33,8 @@ const PUSH = 0b01001101;
 //const SUB = 10101001;
 //const XOR = 10110010;
 
+const SP = 7;
+
 /**
  * Class for simulating a simple Computer (CPU & memory)
  */
@@ -47,6 +49,7 @@ class CPU {
         this.reg = new Array(8).fill(0); // General-purpose registers R0-R7
         
         this.reg.PC = 0; // Program Counter
+				this.reg[SP] = 0xF4;
     }
 	
     /**
@@ -112,12 +115,12 @@ class CPU {
             this.alu(IR, operandA, operandB);
             break;
           case PUSH:
-            this.ram.SP -= 1;
-            this.ram.write(this.ram.SP, this.reg[operandA]);
+            this.reg[SP] -= 1;
+            this.ram.write(this.reg[SP], this.reg[operandA]);
             break;
           case POP:
-            this.reg[operandA] = this.ram.read(this.ram.SP);
-            this.ram.SP += 1;
+            this.reg[operandA] = this.ram.read(this.reg[SP]);
+            this.reg[SP] += 1;
             break;
         }	
         let operandCount = (IR >>> 6) & 0b11;
