@@ -16,7 +16,7 @@ const JEQ = 0b01010001;
 // const JGT =
 //const JLT =
 const JMP = 0b01010000;
-const JNE =
+const JNE = 0b01010010;
 //const LD =
 const LDI = 0b10011001;
 //const MOD =
@@ -137,6 +137,12 @@ class CPU {
           case JMP:
             advancePC = false;
             this.reg.PC = this.reg[operandA];
+            break;
+          case JNE:
+            if (this.reg.FL === 0b00000000) {
+              this.reg.PC = this.reg[operandA];
+              advancePC = false;
+            }
             break;
           case LDI:
             this.reg[operandA] = operandB;
