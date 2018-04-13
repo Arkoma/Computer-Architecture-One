@@ -5,7 +5,7 @@
 const ADD = 0b10101000;
 //const AND = 10110011;
 const CALL = 0b01001000;
-//const CMP =
+const CMP = 0b10100000;
 //const DEC =
 //const DIV =
 const HLT = 0b00000001;
@@ -49,7 +49,9 @@ class CPU {
         this.reg = new Array(8).fill(0); // General-purpose registers R0-R7
         
         this.reg.PC = 0; // Program Counter
-				this.reg[SP] = 0xF4;
+        this.reg[SP] = 0xF4;
+
+        this.reg.FL = 0b00000000;
     }
 	
     /**
@@ -113,7 +115,16 @@ class CPU {
 						advancePC = false;
 						this.ram.write(this.reg[SP], this.reg.PC + 2);
 						this.reg.PC = this.reg[operandA];
-						break; 
+            break;
+          case CMP:
+            if (this.reg[operandA] === this.reg[operandB]) {
+              this.reg.FL = 0b00000001;
+            } else if (this.reg[operandA] < this.reg[operandB]) {
+              this.reg.FL = 0b00000100;
+            } else if (this.reg[operandA] > this.reg[operandB]) {
+              this.reg.FL = 0b00000010;
+            }
+            break;
           case HLT:
             this.stopClock();
             break; 
@@ -149,9 +160,6 @@ class CPU {
         this.reg.PC += totalInstructionLen;
 			}
     }
-//	interruptTimer() {
-//		
-//	}
 }
 
 module.exports = CPU;
